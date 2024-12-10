@@ -1,8 +1,11 @@
+import { Suspense } from "react";
 
 export default function LocationPage() {
-  return (
-    <div>
-      Location page
-    </div>
-  )
+    return (
+        <Suspense>
+            <div>
+                Location page
+            </div>
+        </Suspense>
+    );
 }

@@ -1,5 +1,8 @@
 import LocationDetector from "@/components/LocationDitector";
+import { Suspense } from 'react';
 
 export default function Home() {
-  return <LocationDetector/>;
-}
+  return <Suspense>
+    <LocationDetector />
+  </Suspense>;
+};

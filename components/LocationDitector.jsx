@@ -1,6 +1,7 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Suspense } from 'react'
 
 const LocationDetector = () => {
     const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ const LocationDetector = () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     console.log('Geolocation successful:', position.coords);
-                    const params = new URLSearchParams(searchParams.toString());
+                    const params = new URLSearchParams(searchParams.toString()); 
                     params.set('latitude', position.coords.latitude);
                     params.set('longitude', position.coords.longitude);
 
@@ -44,7 +45,7 @@ const LocationDetector = () => {
             {loading && (
                 <>
                     <div className="geoLocationFind" />
-                    <p className="text-4xl text-center p-2 font-mono">Detecting Location...</p>
+                    <p className="text-4xl text-center my-2 font-mono">Detecting Location...</p>
                 </>
             )}
             {error && (
