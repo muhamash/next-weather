@@ -1,16 +1,15 @@
-import AQIComponent from "@/components/Aqi";
 import SuspenseLoader from "@/components/SuspenseLoader";
+import TemperatureComponent from "@/components/Temp";
 import { getResolvedLatLong } from "@/utils/loactionInfo";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-export default async function AQIPage({
+export default async function TemperaturePage({
     params: { location },
     searchParams: { latitude, longitude },
 } )
 {
   const resolved = await getResolvedLatLong( location, longitude, latitude )
-  console.log(resolved)
   if(resolved?.lat === undefined && resolved?.lon === undefined){
         notFound();
     }
@@ -18,6 +17,6 @@ export default async function AQIPage({
   return <Suspense fallback={
     <SuspenseLoader/>
   }>
-    <AQIComponent lat={ resolved?.lat }  lon={ resolved?.lon}/>
+    <TemperatureComponent lat={ resolved?.lat }  lon={ resolved?.lon} />
   </Suspense>
-};
+}

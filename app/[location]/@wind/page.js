@@ -1,8 +1,23 @@
+import SuspenseLoader from "@/components/SuspenseLoader";
+import WindComponent from "@/components/Wind";
+import { getResolvedLatLong } from "@/utils/loactionInfo";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-export default function WindPage() {
-  return (
-    <div>
-      wind
-    </div>
-  )
+export default async function WindPage({
+    params: { location },
+    searchParams: { latitude, longitude },
+  }) {
+    const resolved = await getResolvedLatLong(location, longitude, latitude)
+
+    if(resolved?.lat === undefined && resolved?.lon === undefined){
+        notFound();
+    }
+  
+    return <Suspense fallback={
+      <SuspenseLoader/>
+    }>
+      <WindComponent lat={ resolved?.lat }  lon={ resolved?.lon} />
+    </Suspense>
+      
 }
