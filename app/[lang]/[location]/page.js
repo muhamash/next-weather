@@ -1,8 +1,6 @@
 import LocationInfo from "@/components/LocationInfo";
-import SuspenseLoader from "@/components/SuspenseLoader";
 import { getResolvedLatLong } from "@/utils/loactionInfo";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 export default async function LocationPage({
     params: { location },
@@ -16,10 +14,6 @@ export default async function LocationPage({
     }
 
     return (
-        <Suspense fallback={
-            <SuspenseLoader/>
-        }>
-            <LocationInfo lat={ resolved?.lat }  lon={ resolved?.lon} />
-        </Suspense>
+         <LocationInfo lat={ resolved?.lat }  lon={ resolved?.lon} />
     );
 }

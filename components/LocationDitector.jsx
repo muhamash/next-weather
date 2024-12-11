@@ -1,4 +1,5 @@
 'use client';
+import { useLanguage } from '@/hooks/useLangugage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +9,7 @@ const LocationDetector = () => {
 
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { currentLanguage } = useLanguage();
 
     useEffect(() => {
         const detectLocation = () => {
@@ -22,12 +24,15 @@ const LocationDetector = () => {
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     console.log('Geolocation successful:', { latitude, longitude });
+
+                    // Ensure '?' is added for query params
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('latitude', latitude);
                     params.set('longitude', longitude);
 
+                    const queryString = `?${params.toString()}`;
                     setLoading(false);
-                    router.push(`/current?${params.toString()}`);
+                    router.push(`/${currentLanguage.value}/current${queryString}`);
                 },
                 (geoError) => {
                     console.error('Geolocation error:', geoError);
@@ -50,10 +55,10 @@ const LocationDetector = () => {
             ) : error ? (
                 <p className="text-xl text-red-500 text-center mt-4">{error}</p>
             ) : (
-                        <>
-                            <div className="geoLocationFind"></div>
-                            <span className="textLoader">Load&nbsp;ng</span>
-                        </>
+                <>
+                    <div className="geoLocationFind"></div>
+                    <span className="textLoader">Load&nbsp;ng</span>
+                </>
             )}
         </div>
     );
