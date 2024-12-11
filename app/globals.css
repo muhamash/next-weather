@@ -84,3 +84,177 @@
   0%, 25% { transform: rotateX(0deg)}
   75%,  100% { transform: rotateX(-180deg)}
 }
+
+.suspenseLoader {
+          width: 48px;
+          height: 48px;
+          margin: auto;
+          position: relative;
+        }
+        .suspenseLoader:before {
+            content: '';
+            width: 48px;
+            height: 5px;
+            background: #000;
+            opacity: 0.25;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            border-radius: 50%;
+            animation: shadow 0.5s linear infinite;
+          }
+          .suspenseLoader:after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            animation: bxSpin 0.5s linear infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 4px;
+          }
+        @keyframes bxSpin {
+          17% {
+            border-bottom-right-radius: 3px;
+          }
+          25% {
+            transform: translateY(9px) rotate(22.5deg);
+          }
+          50% {
+            transform: translateY(18px) scale(1, .9) rotate(45deg);
+            border-bottom-right-radius: 40px;
+          }
+          75% {
+            transform: translateY(9px) rotate(67.5deg);
+          }
+          100% {
+            transform: translateY(0) rotate(90deg);
+          }
+        }
+
+        @keyframes shadow {
+          0%, 100% {
+            transform: scale(1, 1);
+          }
+          50% {
+            transform: scale(1.2, 1);
+          }
+        }
+      
+/* text */
+.textLoader {
+  color: #FFF;
+  position: relative;
+  display: inline-block;
+  margin-top: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 48px;
+  letter-spacing: 4px;
+  box-sizing: border-box;
+}
+.textLoader::before {
+  content: '';  
+  position: absolute;
+  right: 70px;
+  bottom: 10px;
+  height: 28px;
+  width: 5.15px;
+  background: currentColor;
+  box-sizing: border-box;
+  animation: animloader11 1s linear infinite alternate;
+}
+.textLoader::after {
+  content: '';  
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 125px;
+  top: 2px;
+  border-radius: 50%;
+  background: red;
+  box-sizing: border-box;
+  animation: textLoaderr 1s linear infinite alternate;
+}
+
+@keyframes textLoaderr {
+  0% {
+    transform: translate(0px, 0px) scaleX(1);
+  }
+  14% {
+    transform: translate(-12px, -16px) scaleX(1.05);
+  }
+  28% {
+    transform: translate(-27px, -28px) scaleX(1.07);
+  }
+  42% {
+    transform: translate(-46px, -35px) scaleX(1.1);
+  }
+  57% {
+    transform: translate(-70px, -37px) scaleX(1.1);
+  }
+  71% {
+    transform: translate(-94px, -32px) scaleX(1.07);
+  }
+  85% {
+    transform: translate(-111px, -22px) scaleX(1.05);
+  }
+  100% {
+    transform: translate(-125px, -9px) scaleX(1);
+  }
+}
+
+@keyframes animloader11 {
+  0% {
+    box-shadow: 0 -6px, -122.9px -8px;
+  }
+  25%, 75% {
+    box-shadow: 0 0px, -122.9px -8px;
+  }
+  100% {
+    box-shadow: 0 0px, -122.9px -16px;
+  }
+}
+
+/* geo search */
+.geoLoader {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 20px auto;
+  position: relative;
+  border: 3px solid #458205;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: geoAnimloader 2s linear infinite;
+}
+.geoLoader::after {
+  content: '';  
+  box-sizing: border-box;
+  width: 6px;
+  height: 24px;
+  background: #FFF;
+  transform: rotate(-45deg);
+  position: absolute;
+  bottom: -20px;
+  left: 46px;
+}
+
+@keyframes geoAnimloader {
+  0% {
+    transform: translate(-10px, -10px);
+  }
+  25% {
+    transform: translate(-10px, 10px);
+  }
+  50% {
+    transform: translate(10px, 10px);
+  }
+  75% {
+    transform: translate(10px, -10px);
+  }
+  100% {
+    transform: translate(-10px, -10px);
+  }
+}
+    

@@ -1,7 +1,6 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Suspense } from 'react'
 
 const LocationDetector = () => {
     const [loading, setLoading] = useState(true);
@@ -21,17 +20,18 @@ const LocationDetector = () => {
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    console.log('Geolocation successful:', position.coords);
-                    const params = new URLSearchParams(searchParams.toString()); 
-                    params.set('latitude', position.coords.latitude);
-                    params.set('longitude', position.coords.longitude);
+                    const { latitude, longitude } = position.coords;
+                    console.log('Geolocation successful:', { latitude, longitude });
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.set('latitude', latitude);
+                    params.set('longitude', longitude);
 
                     setLoading(false);
                     router.push(`/current?${params.toString()}`);
                 },
                 (geoError) => {
                     console.error('Geolocation error:', geoError);
-                    setError('Failed to retrieve your location. Please try again.');
+                    setError('Failed to retrieve your location. Please ensure location services are enabled.');
                     setLoading(false);
                 }
             );
@@ -42,14 +42,18 @@ const LocationDetector = () => {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-slate-700 text-white">
-            {loading && (
+            {loading ? (
                 <>
-                    <div className="geoLocationFind" />
-                    <p className="text-4xl text-center my-2 font-mono">Detecting Location...</p>
+                    <div className="geoLoader"></div>
+                    <p className="text-md font-mono text-amber-600 font-semibold mt-5">Detecting your location...</p>
                 </>
-            )}
-            {error && (
+            ) : error ? (
                 <p className="text-xl text-red-500 text-center mt-4">{error}</p>
+            ) : (
+                        <>
+                            <div className="geoLocationFind"></div>
+                            <span className="textLoader">Load&nbsp;ng</span>
+                        </>
             )}
         </div>
     );
