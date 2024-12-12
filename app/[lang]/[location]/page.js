@@ -9,6 +9,7 @@ export default async function LocationPage({
 {
     const resolved = await getResolvedLatLong( location, longitude, latitude )
 
+    // console.log( resolved );
     
     if(resolved?.lat === undefined && resolved?.lon === undefined){
         notFound();
