@@ -18,14 +18,15 @@ export const getLocations = async () =>
     }
 };
 
-export const getLocationByName = async () =>
+export const getLocationByName = async location =>
 {
     try
     {
         if ( !location ) return null;
 
+        const locationData = await getLocations();
         const found = locationData.find(
-            ( item ) => item.location.toLowerCase() === location.toLowerCase()
+            ( item ) => item.city.toLowerCase() === location.toLowerCase()
         );
 
         return found || null;
