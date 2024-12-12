@@ -3,7 +3,7 @@ import Image from "next/image";
 import Card from "./Card";
 
 const TemperatureComponent = async ({ lat, lon }) => {
-    const data = await getTemperatureData( lon, lat );
+    const data = await getTemperatureData( lat, lon );
     
     return (
         <Card>

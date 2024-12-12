@@ -1,18 +1,43 @@
-import { locationData } from "@/public/data/database";
+import 'server-only';
 
-function getLocations ()
+const getLocationFile = {
+    locationFile : ()=> import('../public/data/cities.json').then((module) => module.default),
+}
+
+export const getLocations = async () =>
 {
-    return locationData;
-}
+    try
+    {
+        const data = await getLocationFile.locationFile();
+        return data;
+    }
+    catch ( error )
+    {
+        console.error( 'Error loading video data:', error );
+        throw error;
+    }
+};
 
-function getLocationByName(location) {
-    if (!location) return null;
+export const getLocationByName = async () =>
+{
+    try
+    {
+        if ( !location ) return null;
 
-    const found = locationData.find(
-        (item) => item.location.toLowerCase() === location.toLowerCase()
-    );
+        const found = locationData.find(
+            ( item ) => item.location.toLowerCase() === location.toLowerCase()
+        );
 
-    return found || null;
-}
+        return found || null;
+    }
+    catch ( error )
+    {
+        console.error( 'Error loading video data:', error );
+        throw error;
+    }
+};
 
-export { getLocationByName, getLocations };
+// const getCsvFile = async () =>
+// {
+//     return  import( '../public/data/worldcities.csv' ).then( ( module ) => module.default );
+// }import { getLocationByName } from '@/utils/functions';

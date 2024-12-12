@@ -2,7 +2,7 @@ import { getLocationData } from "@/utils/loactionInfo";
 import LocationSwitcher from "./LocationSwitcher";
 
 const LocationInfo = async ({ lat, lon }) => {
-    const locationInfo = await getLocationData( lon, lat );
+    const locationInfo = await getLocationData( lat, lon );
     // console.log( locationInfo );
 
     return (

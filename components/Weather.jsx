@@ -4,7 +4,7 @@ import Card from "./Card";
 
 const WeatherComponent = async ( { lat, lon } ) =>
 {
-    const data = await getWeatherData( lon, lat );
+    const data = await getWeatherData( lat, lon );
     // console.log( data )
     
     return (

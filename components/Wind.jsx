@@ -4,7 +4,7 @@ import Card from "./Card";
 
 
 const WindComponent = async ({ lat, lon }) => {
-    const data = await getWindData( lon, lat );
+    const data = await getWindData( lat, lon );
 
     return (
         <Card>

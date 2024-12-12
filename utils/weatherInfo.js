@@ -30,6 +30,7 @@ export const getWindData = async (lat, lon) => {
             `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_KEY}&units=metric`
         );
         const data = await response.json();
+        // console.log(data)
         return data?.wind;
     } catch (e) {
         console.error(e.message);
