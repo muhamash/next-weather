@@ -1,58 +1,80 @@
 "use client";
 
-import { getLocationLatLongList } from "@/utils/loactionInfo";
+import { getLocationLatLongList, getSearchLocations } from "@/utils/loactionInfo";
 import { AnimatePresence, motion } from "framer-motion";
+import debounce from "lodash.debounce"; // Import debounce function
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const LocationSwitcher = () => {
+const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     const [showLocationList, setShowLocationList] = useState(false);
-    const [locations, setLocations] = useState([]);
+    const [locations, setLocations] = useState(initialLocations);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [totalPages, setTotalPages] = useState(initialTotalPages);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const observer = useRef();
+    const observer = useRef(null);
 
-    // Fetch locations
-    const fetchLocations = async (pageNumber) => {
+    const fetchLocations = useCallback(async (query, pageNumber) => {
         setLoading(true);
         setError(null);
 
         try {
-            const response = await getLocationLatLongList(pageNumber, 10);
+            const response = query
+                ? await getSearchLocations(query, pageNumber, 10)
+                : await getLocationLatLongList(pageNumber, 10);
+
             if (response.status === 200) {
-                setLocations((prev) => [...prev, ...response.data]);
+                setLocations((prev) => (pageNumber === 1 ? response.data : [...prev, ...response.data]));
                 setTotalPages(response.totalPages);
             } else {
                 setError(response.message || "Failed to fetch locations");
             }
         } catch (err) {
             setError("Error fetching location data");
-            console.error(err);
+            console.error("Fetch error:", err);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    // Handle button click
-    const toggleLocationList = () => {
-        setShowLocationList((prev) => !prev);
-        if (locations.length === 0 && !loading) {
-            fetchLocations(1); // Fetch first page initially
+    useEffect(() => {
+        if (showLocationList) {
+            fetchLocations(searchQuery, page);
         }
+    }, [searchQuery, page, showLocationList, fetchLocations]);
+
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            setSearchQuery(query);
+            setPage(1); 
+        }, 500),
+        []
+    );
+
+    const handleSearchChange = (e) => {
+        debouncedSearch(e.target.value);
     };
 
-    // Infinite scrolling logic
+    const toggleLocationList = () => {
+        setShowLocationList((prev) => {
+            if (!prev && locations.length === 0) {
+                fetchLocations("", 1);
+            }
+            return !prev;
+        });
+    };
+
     const lastLocationRef = useCallback(
         (node) => {
-            if (loading) return;
+            if (loading || page >= totalPages) return;
+
             if (observer.current) observer.current.disconnect();
 
             observer.current = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && page < totalPages) {
+                if (entries[0].isIntersecting) {
                     setPage((prev) => prev + 1);
                 }
             });
@@ -60,16 +82,6 @@ const LocationSwitcher = () => {
             if (node) observer.current.observe(node);
         },
         [loading, page, totalPages]
-    );
-
-    // Fetch on page change
-    useEffect(() => {
-        if (page > 1) fetchLocations(page);
-    }, [page]);
-
-    // Filter locations based on search query
-    const filteredLocations = locations.filter((location) =>
-        location.city.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const locationListVariants = {
@@ -82,8 +94,7 @@ const LocationSwitcher = () => {
         <div className="relative">
             <button onClick={toggleLocationList}>
                 <Image
-                    className={`shadow-sm rounded-md shadow-slate-600
-                    `}
+                    className="shadow-sm rounded-md shadow-slate-600"
                     src="/search.png"
                     alt="link icon"
                     width={50}
@@ -104,10 +115,9 @@ const LocationSwitcher = () => {
                         {/* Search field */}
                         <input
                             type="text"
-                            className="w-full p-2 mb-4 border rounded-md"
-                            placeholder="Search locations..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full p-2 mb-4 border rounded-md text-sm font-mono text-cyan-800"
+                            placeholder="Search locations"
+                            onChange={handleSearchChange}
                         />
 
                         {loading && locations.length === 0 && (
@@ -116,30 +126,26 @@ const LocationSwitcher = () => {
                             </div>
                         )}
                         {error && <p className="text-red-500">{error}</p>}
-                        {filteredLocations.length > 0 ? (
-                            filteredLocations.map((location, index) => (
+
+                        {locations.length > 0 ? (
+                            locations.map((location, index) => (
                                 <p
                                     className="text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200"
                                     key={index}
-                                    ref={
-                                        filteredLocations.length === index + 1
-                                            ? lastLocationRef
-                                            : null
-                                    }
+                                    ref={locations.length === index + 1 ? lastLocationRef : null}
                                 >
-                                    {location.city}
+                                    {location.city_ascii}
                                 </p>
                             ))
                         ) : (
                             !loading && !error && (
                                 <div className="w-full flex items-center justify-center">
-                                    <p className="text-md font-mono text-rose-600">
-                                        No locations found
-                                    </p>
+                                    <p className="text-md font-mono text-rose-600">No locations found</p>
                                 </div>
                             )
                         )}
-                        {loading && filteredLocations.length > 0 && (
+
+                        {loading && locations.length > 0 && (
                             <div className="w-full flex items-center justify-center">
                                 <div className="loaderLoaction" />
                             </div>

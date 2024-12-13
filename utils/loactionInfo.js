@@ -13,7 +13,21 @@ export const getLocationData = async (lat, lon) => {
     }
 };
 
-export const getLocationLatLongList = async ( page = 1, limit = 10 ) =>
+export const getSearchLocations = async ( query, page, limit = 10 ) =>
+{
+    try {
+        const response = await fetch(
+            `http://localhost:3000/api/location/search?query=${query}&page=${page}&limit=${limit}`
+        );
+        const data = await response.json();
+        // console.log(data)
+        return data;
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
+export const getLocationLatLongList = async ( page, limit = 10 ) =>
 {
     try
     {
