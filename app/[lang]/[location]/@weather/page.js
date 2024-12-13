@@ -7,7 +7,7 @@ export default async function WeatherPage({
     searchParams: { latitude, longitude },
 } )
 {
-    const resolved = await getResolvedLatLong( location, longitude, latitude )
+    const resolved = await getResolvedLatLong( location, latitude, longitude )
 
     if(resolved?.lat === undefined && resolved?.lon === undefined){
         notFound();

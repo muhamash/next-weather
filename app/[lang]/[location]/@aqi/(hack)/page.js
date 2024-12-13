@@ -7,7 +7,7 @@ export default async function AQIPage({
     searchParams: { latitude, longitude },
 } )
 {
-  const resolved = await getResolvedLatLong( location, longitude, latitude )
+  const resolved = await getResolvedLatLong( location, latitude, longitude )
   // console.log( resolved )
 
   if(resolved?.lat === undefined && resolved?.lon === undefined){

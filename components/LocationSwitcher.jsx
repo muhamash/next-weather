@@ -1,9 +1,11 @@
 "use client";
 
+import { useLanguage } from '@/hooks/useLangugage';
 import { getLocationLatLongList, getSearchLocations } from "@/utils/loactionInfo";
 import { AnimatePresence, motion } from "framer-motion";
 import debounce from "lodash.debounce";
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
@@ -15,6 +17,7 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     const [totalPages, setTotalPages] = useState(initialTotalPages);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const {currentLanguage} = useLanguage();
     const observer = useRef(null);
 
     const fetchLocations = useCallback(async (query, pageNumber) => {
@@ -134,13 +137,14 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
 
                         {locations.length > 0 ? (
                             locations.map((location, index) => (
-                                <p
-                                    className="text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200"
+                                <Link 
+                                    href={`http://localhost:3000/${currentLanguage.value}/${location.city_ascii.toLowerCase()}`}
+                                    className="text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200 block"
                                     key={index}
                                     ref={locations.length === index + 1 ? lastLocationRef : null}
                                 >
                                     {location.city_ascii}
-                                </p>
+                                </Link>
                             ))
                         ) : (
                             !loading && !error && (

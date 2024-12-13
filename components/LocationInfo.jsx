@@ -1,16 +1,16 @@
 import { getLocationData } from "@/utils/loactionInfo";
 import LocationSwitcher from "./LocationSwitcher";
 
-const LocationInfo = async ({ lat, lon }) => {
-    const locationInfo = await getLocationData( lon, lat );
-    // console.log( locationInfo );
+const LocationInfo = async ({ lat, lon }, params) => {
+    const locationInfo = await getLocationData( lat, lon );
+    // console.log( locationInfo, params );
 
     return (
         <div className="col-span-12 flex flex-col justify-end lg:col-span-8 2xl:col-span-9">
             <div>
                 <div className="mb-2 flex items-center gap-2">
                     <h2 className="text-3xl font-bold text-white lg:text-4xl 2xl:text-[40px]">
-                        {locationInfo?.address?.suburb}
+                        {locationInfo?.address?.suburb || locationInfo?.address?.town || locationInfo?.display_name} | {}
                     </h2>
                     <LocationSwitcher/>
                 </div>

@@ -66,8 +66,8 @@ export const getResolvedLatLong = async ( location, lat, lon ) =>
 
     if ( locationLatlong?.data )
     {
-        const lon = locationLatlong.data.lat;
-        const lat = locationLatlong.data.lng;
+        const lon = locationLatlong.data.lng;
+        const lat = locationLatlong.data.lat;
 
         return { lat, lon };
     }

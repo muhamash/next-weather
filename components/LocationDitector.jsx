@@ -25,7 +25,6 @@ const LocationDetector = () => {
                     const { latitude, longitude } = position.coords;
                     console.log('Geolocation successful:', { latitude, longitude });
 
-                    // Ensure '?' is added for query params
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('latitude', latitude);
                     params.set('longitude', longitude);
