@@ -7,7 +7,7 @@ export default async function TemperaturePage({
     searchParams: { latitude, longitude },
 } )
 {
-  const resolved = await getResolvedLatLong( location, longitude, latitude, longitude )
+  const resolved = await getResolvedLatLong( location, latitude, longitude )
   if(resolved?.lat === undefined && resolved?.lon === undefined){
         notFound();
     }
