@@ -41,17 +41,15 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     }, []);
 
     useEffect(() => {
-        if (showLocationList) {
-            fetchLocations(searchQuery, page);
-        }
-    }, [searchQuery, page, showLocationList, fetchLocations]);
+        fetchLocations(searchQuery, page);
+    }, [searchQuery, page, fetchLocations]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
             setSearchQuery(query);
             setPage(1); 
         }, 500),
-        []
+        [debounce]
     );
 
     const handleSearchChange = (e) => {
