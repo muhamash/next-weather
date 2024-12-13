@@ -312,3 +312,31 @@
         }
       }
     
+
+      /* loader not found locationserach */
+      .searchLoader {
+  width: 54px;
+  height: 54px;
+  position: relative;
+  background: black;
+  border-radius: 4px;
+}
+.searchLoader:before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: yellow;
+  border-radius: 50%;
+  transform-origin: 100% 100%;
+  animation: searchLoaderMove 1s linear infinite;
+}
+@keyframes searchLoaderMove {
+    0% , 100%{ transform: translate(0 ,0)}
+    25%{ transform: translate(100% ,0)}
+    50%{ transform: translate(100% ,100%)}
+    75%{ transform: translate(0 ,100%)}
+}
+      

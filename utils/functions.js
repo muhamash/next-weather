@@ -26,7 +26,7 @@ export const getLocationByName = async location =>
 
         const locationData = await getLocations();
         const found = locationData.find(
-            ( item ) => item.city.toLowerCase() === location.toLowerCase()
+            ( item ) => item.city_ascii.toLowerCase() === location.toLowerCase()
         );
 
         return found || null;

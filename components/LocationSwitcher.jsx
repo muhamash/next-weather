@@ -2,7 +2,7 @@
 
 import { getLocationLatLongList, getSearchLocations } from "@/utils/loactionInfo";
 import { AnimatePresence, motion } from "framer-motion";
-import debounce from "lodash.debounce"; // Import debounce function
+import debounce from "lodash.debounce";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -22,6 +22,10 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
         setError(null);
 
         try {
+            if (pageNumber === 1 && query) {
+                setLocations([]);
+            }
+
             const response = query
                 ? await getSearchLocations(query, pageNumber, 10)
                 : await getLocationLatLongList(pageNumber, 10);
@@ -47,9 +51,9 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     const debouncedSearch = useCallback(
         debounce((query) => {
             setSearchQuery(query);
-            setPage(1); 
+            setPage(1);
         }, 500),
-        [debounce]
+        []
     );
 
     const handleSearchChange = (e) => {
@@ -123,7 +127,10 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                                 <div className="loaderLoaction" />
                             </div>
                         )}
-                        {error && <p className="text-red-500">{error}</p>}
+                        { error && ( <div className="flex w-fit items-center justify-center flex-col gap-3">
+                            <div className="searchLoader"></div>
+                            <p className="text-red-500">{error}</p>
+                        </div>)}
 
                         {locations.length > 0 ? (
                             locations.map((location, index) => (
@@ -138,6 +145,7 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                         ) : (
                             !loading && !error && (
                                 <div className="w-full flex items-center justify-center">
+                                    <div className="notFoundLoader" />
                                     <p className="text-md font-mono text-rose-600">No locations found</p>
                                 </div>
                             )
@@ -148,6 +156,11 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                                 <div className="loaderLoaction" />
                             </div>
                         )}
+                        {
+                            page >= totalPages && !loading && !error && (
+                                <p className="text-center text-sm font-semibold text-slate-500">No more data!!</p>
+                            )
+                        }
                     </motion.div>
                 )}
             </AnimatePresence>

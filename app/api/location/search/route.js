@@ -17,7 +17,20 @@ export async function GET(request) {
     );
 
     // pagination to filtered locations
-    const paginatedLocations = filteredLocations.slice(startIndex, startIndex + limit);
+    const paginatedLocations = filteredLocations.slice( startIndex, startIndex + limit );
+    
+    if (paginatedLocations.length === 0) {
+      return new Response( JSON.stringify( {
+        status: 404,
+        success: false,
+        message: "Location not found",
+      } ), {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      } );
+    };
 
     return new Response(
       JSON.stringify({
