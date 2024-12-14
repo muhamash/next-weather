@@ -1,7 +1,7 @@
 import { getWindData } from "@/utils/weatherInfo";
 import Image from "next/image";
 import Card from "./Card";
-
+import Heading from "./Heading";
 
 const WindComponent = async ({ lat, lon }) => {
     const data = await getWindData( lat, lon );
@@ -11,7 +11,7 @@ const WindComponent = async ({ lat, lon }) => {
             { 
             data ? (
                     <>
-                        <h6 className="feature-name">Wind</h6>
+                        <Heading data={"wind"}/>
                         <div className="feature-main">
                             <Image
                                 className="max-w-20"

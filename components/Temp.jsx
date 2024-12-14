@@ -1,13 +1,14 @@
 import { getTemperatureData } from "@/utils/weatherInfo";
 import Image from "next/image";
 import Card from "./Card";
+import Heading from "./Heading";
 
 const TemperatureComponent = async ({ lat, lon }) => {
     const data = await getTemperatureData( lat, lon );
     
     return (
         <Card>
-            <h6 className="feature-name">Current Temperature</h6>
+            <Heading data={"temp"}/>
             <div className="feature-main">
                 <Image
                     className="max-w-20"

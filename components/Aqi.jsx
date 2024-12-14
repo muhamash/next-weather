@@ -1,6 +1,7 @@
 import { getAQIData } from "@/utils/weatherInfo";
 import Image from "next/image";
 import Card from "./Card";
+import Heading from "./Heading";
 
 const AQIComponent = async ({ lat, lon }) => {
     const data = await getAQIData( lat, lon );
@@ -25,8 +26,7 @@ const AQIComponent = async ({ lat, lon }) => {
 
     return (
         <Card>
-            <h6 className="feature-name">Air Pollution & Quality</h6>
-
+            <Heading data={"air"}/>
             <div className="mt-3 space-y-2 lg:space-y-3">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2 text-sm text-[#CADEE8] lg:text-base">

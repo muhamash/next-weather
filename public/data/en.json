@@ -1,0 +1,8 @@
+{
+    "home":{
+        "air": "Air Pollution & Quality",
+        "wind": "Wind Speed",
+        "temp": "Current Temperature",
+        "weather": "Current Weather"
+    }
+}
