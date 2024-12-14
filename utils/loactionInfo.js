@@ -27,18 +27,33 @@ export const getSearchLocations = async ( query, page, limit = 10 ) =>
     }
 }
 
-export const getLocationLatLongList = async ( page, limit = 10 ) =>
-{
-    try
-    {
-        const response = await fetch( `${process.env.NEXT_API_URL}/location?page=${page}&limit=${limit}` );
-        const data = await response.json();
-        return data;
-    } catch ( e )
-    {
-        console.error( "Error fetching paginated data:", e.message );
-        throw new Error( "Unable to fetch locations" );
+export const getLocationLatLongList = async (page, limit = 10) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_API_URL}/location?page=${page}&limit=${limit}`
+    );
+
+    // Check if the response is OK
+    if (!response.ok) {
+      console.error("Server responded with an error:", response.status, response.statusText);
+      throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
     }
+
+    // Attempt to parse the response as JSON
+    const data = await response.json();
+    return data;
+
+  } catch (e) {
+    console.error("Error fetching paginated data:", e.message);
+    console.error("Stack trace:", e.stack);
+
+    // Optionally log raw response in case of unexpected data
+    if (e instanceof SyntaxError) {
+      console.error("Response is not valid JSON. Ensure the API returns JSON.");
+    }
+
+    throw new Error("Unable to fetch locations");
+  }
 };
 
 export const getLocationLatLong = async (locationName) => {
