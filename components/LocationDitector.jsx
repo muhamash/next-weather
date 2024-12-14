@@ -31,7 +31,7 @@ const LocationDetector = () => {
 
                     const queryString = `?${params.toString()}`;
                     setLoading(false);
-                    router.push(`/${currentLanguage.value}/current${queryString}`);
+                    router.push(`/${currentLanguage.value}/country/current${queryString}`);
                 },
                 (geoError) => {
                     console.error('Geolocation error:', geoError);

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import debounce from "lodash.debounce";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
@@ -17,8 +18,9 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     const [totalPages, setTotalPages] = useState(initialTotalPages);
     const [searchQuery, setSearchQuery] = useState("");
 
-    const {currentLanguage} = useLanguage();
+    const { currentLanguage } = useLanguage();
     const observer = useRef(null);
+    const params = useParams();
 
     const fetchLocations = useCallback(async (query, pageNumber) => {
         setLoading(true);
@@ -34,7 +36,9 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                 : await getLocationLatLongList(pageNumber, 10);
 
             if (response.status === 200) {
-                setLocations((prev) => (pageNumber === 1 ? response.data : [...prev, ...response.data]));
+                setLocations((prev) =>
+                    pageNumber === 1 ? response.data : [...prev, ...response.data]
+                );
                 setTotalPages(response.totalPages);
             } else {
                 setError(response.message || "Failed to fetch locations");
@@ -95,6 +99,18 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
         exit: { opacity: 0, y: -10 },
     };
 
+    const isActive = (location) => {
+    const decodedLocation = decodeURIComponent(params.location);
+        return (
+            decodedLocation === location.city.toLowerCase() &&
+                location.country === locations.find(
+                (loc) => decodeURIComponent(loc.city.toLowerCase()) ===  decodedLocation
+            )?.country
+        );
+    };
+
+    // console.log(params)
+
     return (
         <div className="relative">
             <button onClick={toggleLocationList}>
@@ -130,27 +146,40 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                                 <div className="loaderLoaction" />
                             </div>
                         )}
-                        { error && ( <div className="flex w-fit items-center justify-center flex-col gap-3">
-                            <div className="searchLoader"></div>
-                            <p className="text-red-500">{error}</p>
-                        </div>)}
+                        {error && (
+                            <div className="flex w-fit items-center justify-center flex-col gap-3">
+                                <div className="searchLoader"></div>
+                                <p className="text-red-500">{error}</p>
+                            </div>
+                        )}
 
                         {locations.length > 0 ? (
                             locations.map((location, index) => (
-                                <Link 
-                                    href={`http://localhost:3000/${currentLanguage.value}/${location.city_ascii.toLowerCase()}`}
-                                    className="text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200 block"
+                                <Link
+                                    href={`http://localhost:3000/${currentLanguage.value}/${location.country.toLowerCase()}/${location.city.toLowerCase()}`}
+                                    className={`text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200 block ${
+                                        isActive(location)
+                                            ? "bg-amber-600 text-white font-bold"
+                                            : ""
+                                    }`}
                                     key={index}
-                                    ref={locations.length === index + 1 ? lastLocationRef : null}
+                                    ref={
+                                        locations.length === index + 1
+                                            ? lastLocationRef
+                                            : null
+                                    }
                                 >
-                                    {location.city_ascii}
+                                    {location.city}
                                 </Link>
                             ))
                         ) : (
-                            !loading && !error && (
+                            !loading &&
+                            !error && (
                                 <div className="w-full flex items-center justify-center">
                                     <div className="notFoundLoader" />
-                                    <p className="text-md font-mono text-rose-600">No locations found</p>
+                                    <p className="text-md font-mono text-rose-600">
+                                        No locations found
+                                    </p>
                                 </div>
                             )
                         )}
@@ -160,11 +189,11 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                                 <div className="loaderLoaction" />
                             </div>
                         )}
-                        {
-                            page >= totalPages && !loading && !error && (
-                                <p className="text-center text-sm font-semibold text-slate-500">No more data!!</p>
-                            )
-                        }
+                        {page >= totalPages && !loading && !error && (
+                            <p className="text-center text-sm font-semibold text-slate-500 mt-3">
+                                No more data!!
+                            </p>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

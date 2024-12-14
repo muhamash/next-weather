@@ -23,12 +23,13 @@ export const getLocationByName = async location =>
     try
     {
         if ( !location ) return null;
-
+        // console.log(location)
         const locationData = await getLocations();
         const found = locationData.find(
-            ( item ) => item.city_ascii.toLowerCase() === location.toLowerCase()
+            ( item ) => item.city.toLowerCase() === location.toLowerCase()
         );
 
+        // console.log(found)
         return found || null;
     }
     catch ( error )
