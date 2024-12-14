@@ -100,24 +100,25 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
     };
 
     function normalizeString(str) {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]/g, '');
     };
-
-    // console.log(params)
 
     const isActive = ( location ) =>
     {
         if ( !params ) return false;
 
-        const decodedCity = params.location ? decodeURIComponent( params.location ).toLowerCase() : "";
-        const decodedCountry = params.country ? decodeURIComponent( params.country ).toLowerCase() : "";
+        const decodedCity = params.location ? normalizeString(decodeURIComponent( params.location )).toLowerCase() : "";
+        const decodedCountry = params.country ? normalizeString(decodeURIComponent( params.country ).toLowerCase()) : "";
 
-        const locationCity = normalizeString( location.city_ascii.toLowerCase() );
-        const locationCountry = normalizeString( location.country.toLowerCase() );
+        const locationCity = normalizeString(decodeURIComponent( location.city )).toLowerCase();
+        const locationCountry = normalizeString(decodeURIComponent( location.country )).toLowerCase();
 
         return (
-            normalizeString( decodedCity ) === locationCity &&
-            normalizeString( decodedCountry ) === locationCountry
+            decodedCity === locationCity &&
+            decodedCountry  === locationCountry
         );
     };
 
@@ -166,7 +167,7 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                         {locations.length > 0 ? (
                             locations.map((location, index) => (
                                 <Link
-                                    href={`http://localhost:3000/${currentLanguage.value}/${location.country.toLowerCase()}/${location.city.toLowerCase()}`}
+                                    href={`${"http://localhost:3000" || procces.env.NEXT_UI_URL}/${currentLanguage.value}/${location.country.toLowerCase()}/${location.city.toLowerCase()}`}
                                     className={`text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200 block ${
                                         isActive(location)
                                             ? "bg-amber-600 text-white font-bold"

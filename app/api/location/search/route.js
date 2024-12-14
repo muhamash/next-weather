@@ -6,14 +6,21 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "10", 10);
-  const query = searchParams.get("query");
+  const query = searchParams.get( "query" );
+  
+  function normalizeString(str) {
+        return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]/g, '');
+  };
 
   try {
     const allLocations = await getLocations();
     const startIndex = (page - 1) * limit;
 
     const filteredLocations = allLocations.filter((location) =>
-      location.city_ascii.toLowerCase().includes(query.toLowerCase())
+      normalizeString(location.city_ascii).toLowerCase().includes(query.toLowerCase())
     );
 
     // pagination to filtered locations
