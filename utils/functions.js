@@ -39,6 +39,10 @@ export const getLocationByName = async location =>
     }
 };
 
+// export const getNormalizeString = async ( str ) =>
+// {
+//     return str.normalize( 'NFD' ).replace( /[\u0300-\u036f]/g, '' );
+// };
 // const getCsvFile = async () =>
 // {
 //     return  import( '../public/data/worldcities.csv' ).then( ( module ) => module.default );

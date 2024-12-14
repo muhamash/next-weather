@@ -44,31 +44,41 @@ export const getLocationLatLongList = async ( page, limit = 10 ) =>
 export const getLocationLatLong = async (locationName) => {
     try {
         const response = await fetch(
-            `http://localhost:3000/api/location/${locationName}`
+            `http://localhost:3000/api/location/search?query=${locationName}`
         );
         const data = await response.json();
+        // console.log(data)
         return data;
     } catch (e) {
         console.error(e.message);
     }
 };
 
-export const getResolvedLatLong = async ( location, lat, lon ) =>
-{
-    console.log( location, lat, lon );
-    if ( lat && lon )
-    {
+export const getResolvedLatLong = async (params, lat, lon) => {
+    if (lat && lon) {
         return { lat, lon };
     }
 
-    const locationLatlong = await getLocationLatLong( location );
-    // console.log( locationLatlong.data.lat, location );
+    function normalizeString(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
 
-    if ( locationLatlong?.data )
-    {
-        const lon = locationLatlong.data.lng;
-        const lat = locationLatlong.data.lat;
+    const decodedLocation = normalizeString(decodeURIComponent(params.location).toLowerCase());
+    const decodedCountry = normalizeString(decodeURIComponent(params.country).toLowerCase());
+    const locationLatlon = await getLocationLatLong(decodedLocation);
 
-        return { lat, lon };
+    if (locationLatlon?.data) {
+        const data = locationLatlon?.data?.find(
+            (location) =>
+                normalizeString(location.city_ascii.toLowerCase()) === decodedLocation &&
+                normalizeString(location.country.toLowerCase()) === decodedCountry
+        );
+
+        // console.log(data);
+        if (data) {
+            return { lat: data?.lat, lon: data?.lng };
+        }
     }
+
+    return null; 
 };

@@ -5,10 +5,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 export default async function WindPage({
-    params: { location },
+    params,
     searchParams: { latitude, longitude },
   }) {
-    const resolved = await getResolvedLatLong(location, latitude, longitude)
+    const resolved = await getResolvedLatLong(params, latitude, longitude)
 
     if(resolved?.lat === undefined && resolved?.lon === undefined){
         notFound();

@@ -99,17 +99,27 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
         exit: { opacity: 0, y: -10 },
     };
 
-    const isActive = (location) => {
-    const decodedLocation = decodeURIComponent(params.location);
-        return (
-            decodedLocation === location.city.toLowerCase() &&
-                location.country === locations.find(
-                (loc) => decodeURIComponent(loc.city.toLowerCase()) ===  decodedLocation
-            )?.country
-        );
+    function normalizeString(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     };
 
     // console.log(params)
+
+    const isActive = ( location ) =>
+    {
+        if ( !params ) return false;
+
+        const decodedCity = params.location ? decodeURIComponent( params.location ).toLowerCase() : "";
+        const decodedCountry = params.country ? decodeURIComponent( params.country ).toLowerCase() : "";
+
+        const locationCity = normalizeString( location.city_ascii.toLowerCase() );
+        const locationCountry = normalizeString( location.country.toLowerCase() );
+
+        return (
+            normalizeString( decodedCity ) === locationCity &&
+            normalizeString( decodedCountry ) === locationCountry
+        );
+    };
 
     return (
         <div className="relative">
@@ -126,7 +136,7 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
             <AnimatePresence>
                 {showLocationList && (
                     <motion.div
-                        className="absolute left-0 top-12 z-[999] rounded-md md:w-[200px] bg-slate-100 p-4 max-md:-translate-x-1/2 h-[250px] shadow-lg shadow-slate-500 overflow-y-auto mb-5"
+                        className="absolute md:left-0 right-0 top-12 z-[999] rounded-md w-[200px] bg-slate-100 p-4 max-md:-translate-x-1/2 h-[250px] shadow-lg shadow-slate-500 overflow-y-auto mb-5"
                         variants={locationListVariants}
                         initial="hidden"
                         animate="visible"
@@ -135,8 +145,8 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                     >
                         {/* Search field */}
                         <input
-                            type="text"
-                            className="w-full p-2 mb-4 border rounded-md text-sm font-mono text-cyan-800"
+                          type="text"
+                          className="w-[150px] p-1 mb-4 border rounded-md text-sm font-mono text-cyan-800"
                             placeholder="Search locations"
                             onChange={handleSearchChange}
                         />

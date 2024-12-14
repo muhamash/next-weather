@@ -3,11 +3,11 @@ import { getResolvedLatLong } from "@/utils/loactionInfo";
 import { notFound } from "next/navigation";
 
 export default async function AQIPage({
-    params: { location },
+    params,
     searchParams: { latitude, longitude },
 } )
 {
-  const resolved = await getResolvedLatLong( location, latitude, longitude )
+  const resolved = await getResolvedLatLong( params, latitude, longitude )
   // console.log( resolved )
 
   if(resolved?.lat === undefined && resolved?.lon === undefined){
