@@ -167,7 +167,7 @@ const LocationSwitcher = ({ initialLocations = [], initialTotalPages = 1 }) => {
                         {locations.length > 0 ? (
                             locations.map((location, index) => (
                                 <Link
-                                    href={`${process.env.NEXT_UI_URL}/${currentLanguage.value}/${location.country.toLowerCase()}/${location.city.toLowerCase()}`}
+                                    href={`${process.env.NEXT_PUBLIC_UI_I_URL}/${currentLanguage.value}/${location.country.toLowerCase()}/${location.city.toLowerCase()}`}
                                     className={`text-sm hover:bg-green-700 hover:text-white font-mono px-3 py-1 rounded-md cursor-pointer hover:shadow-md hover:shadow-slate-600 transition-all duration-200 block ${
                                         isActive(location)
                                             ? "bg-amber-600 text-white font-bold"
